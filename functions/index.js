@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
-const api_key   = 'key-636579972a725f67a7e107f47220906a';
-const domain    = 'mg.omniscent.com';
+const api_key   = 'api_key';
+const domain    = 'domain.com';
 const mailgun   = require('mailgun-js')({apiKey: api_key, domain: domain});
 
 // // Create and Deploy Your First Cloud Functions
