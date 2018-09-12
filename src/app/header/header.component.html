@@ -1,0 +1,19 @@
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="/">Firebase</a>
+  <div class="navbar-expand mr-auto" *ngIf="isLogin">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" [ngClass]="{'active': path === '/'}" [routerLink]="['/']">Home</a>
+      <a class="nav-item nav-link" [ngClass]="{'active': path === '/history'}" [routerLink]="['/history']">History</a>
+    </div>
+  </div>
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link" (click)="logout()" *ngIf="isLogin;else loginEle">
+        Logout
+      </a>
+      <ng-template #loginEle>
+        <a class="nav-item nav-link" [routerLink]="['/login']">Login</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>

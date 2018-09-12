@@ -1,0 +1,10 @@
+.home-container .upload-file-container {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-container .upload-file-container button {
+    margin-left: 1em;
+}

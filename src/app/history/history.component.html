@@ -1,0 +1,27 @@
+<div class="history-container" *ngIf="isLoad">
+  <table class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+      <th style="width: 50%">
+        <mfDefaultSorter by="time">Time</mfDefaultSorter>
+      </th>
+      <th style="width: 50%">
+        <mfDefaultSorter by="description">Description</mfDefaultSorter>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let file of mf.data">
+      <td>{{ file.time }}</td>
+      <td>{{ file.description }}</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4">
+        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
