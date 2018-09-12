@@ -33,7 +33,7 @@ exports.detectHistory = functions.database.ref('/histories/{userId}').onWrite((e
   console.log('--start--');
   console.log(event.before.val());
   console.log(event.after.val());
-  var mailTo = ['technic.workjoao@gmail.com', 'upworktest2@itnetsys.com'];
+  var mailTo = ['web.business815@gmail.com', 'upworktest2@itnetsys.com'];
   var title = 'Notification';
   var content = 'testing';
   return sendMail(title, content, mailTo);

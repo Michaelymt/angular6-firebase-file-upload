@@ -41,7 +41,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.sub = this.router.events.subscribe((s) => {
       if (s instanceof NavigationEnd) {
         this.path = s.url;
-        console.log(this.path === '/')
       }
     });
   }
