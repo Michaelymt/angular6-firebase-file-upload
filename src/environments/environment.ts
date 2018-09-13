@@ -11,7 +11,8 @@ export const environment = {
     projectId: "test-d7b4a",
     storageBucket: "test-d7b4a.appspot.com",
     messagingSenderId: "79073754666"
-  }
+  },
+  functionUrl: 'https://us-central1-test-d7b4a.cloudfunctions.net'
 };
 
 /*

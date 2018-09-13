@@ -6,6 +6,8 @@ import { finalize } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { AlertService } from '../_services/alert.service';
+import { PurehttpService } from '../_services/pure-http.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   data : any;
   userId: string;
   userEmail: string;
+  functionUrl: string;
   isLoad: boolean;
   isUpload: boolean;
   sub: Subscription;
@@ -24,12 +27,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     private storage: AngularFireStorage,
     private db: AngularFireDatabase,
     private authService: AuthService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pureHttpService: PurehttpService
   ) {
     this.userId = this.authService.authState.uid;
     this.userEmail = this.authService.authState.email;
     this.isLoad = false;
     this.isUpload = false;
+    this.functionUrl = environment.functionUrl;
   }
 
   ngOnInit() {
@@ -45,8 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             name: (itemValue['storagePath'] && itemValue['storagePath'].indexOf('/') > -1) ? itemValue['storagePath'].split('/').pop() : '',
             time: this.convertToDate(itemValue['timestamp'])
           };
-        });
-        this.data = this.data.filter((item) => {
+        }).filter((item) => {
           return item['timestamp'] && item['storagePath'];
         }).sort((a, b) => {
           return parseFloat(b['timestamp']) - parseFloat(a['timestamp']);
@@ -130,6 +134,45 @@ export class HomeComponent implements OnInit, OnDestroy {
         .subscribe();
       }
     }
+  }
+
+  downloadFile(data: any, name: string) {
+    const bytes = new Uint8Array(data.data);
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', name);
+    link.click();
+  }
+
+  onDownloadFile(downloadPath: string, fileName: string) {
+    const objPostData = {
+      url: downloadPath
+    };
+    // let localFunctionUrl = 'http://localhost:5000/test-d7b4a/us-central1';
+
+    this.pureHttpService.callFirebaseFunction(`${this.functionUrl}/getData`, objPostData).subscribe((res: any) => {
+      this.downloadFile(res.data, fileName);
+      const historyRef = this.db.list(`/histories/${this.userId}`);
+      historyRef.push({
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        description: `${this.userEmail} downloaded the file, ${fileName}.`
+      });
+    }, error => {
+      console.log('Fail to get the data to download.');
+      console.log(error);
+    });
+  }
+
+  onDeleteFile(key: string, storagePath: string, fileName: string) {
+    this.storage.ref(storagePath).delete();
+    this.db.list(`/uploads/${this.userId}/${key}`).remove();
+    const historyRef = this.db.list(`/histories/${this.userId}`);
+    historyRef.push({
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      description: `${this.userEmail} deleted the file, ${fileName}.`
+    });
   }
 
 }

@@ -20,6 +20,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuardService } from './_services/auth-guard.service';
 import { HeaderComponent } from './header/header.component';
 import { HistoryComponent } from './history/history.component';
+import { PurehttpService } from './_services/pure-http.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { HistoryComponent } from './history/history.component';
   providers: [
     AlertService,
     AuthService,
-    AuthGuardService
+    AuthGuardService,
+    PurehttpService
   ],
   bootstrap: [AppComponent]
 })

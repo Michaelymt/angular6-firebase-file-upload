@@ -36,6 +36,8 @@ export class HistoryComponent implements OnInit, OnDestroy {
             timestamp: itemValue['timestamp'] ? itemValue['timestamp'] : '',
             time: this.convertToDate(itemValue['timestamp'])
           };
+        }).sort((a, b) => {
+          return parseFloat(b['timestamp']) - parseFloat(a['timestamp']);
         });
         this.isLoad = true;
       });

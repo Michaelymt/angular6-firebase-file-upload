@@ -1,4 +1,6 @@
 const functions = require('firebase-functions');
+const cors       = require('cors')({ origin: true });
+const axios      = require('axios');
 const api_key   = 'api_key';
 const domain    = 'domain.com';
 const mailgun   = require('mailgun-js')({apiKey: api_key, domain: domain});
@@ -37,4 +39,30 @@ exports.detectHistory = functions.database.ref('/histories/{userId}').onWrite((e
   var title = 'Notification';
   var content = 'testing';
   return sendMail(title, content, mailTo);
+});
+
+exports.getData = functions.https.onRequest((req, res) => {
+	cors(req, res, () => {
+		if(req.body.url) {
+			var strUrl = req.body.url;
+ 
+			axios.get(strUrl, {
+        responseType: 'arraybuffer'
+      })
+				.then(posts => {
+					res.send({
+						data: posts.data
+					});
+				})
+				.catch(error => {
+					res.status(500).send({
+						message: error
+					});
+				});
+		} else {
+			res.status(500).send({
+				message: 'url is invalid'
+			});
+		}
+	});
 });
